@@ -1,0 +1,84 @@
+% You should title the file with a .tex extension (hw1.tex, for example)
+\documentclass[11pt]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fancyhdr}
+\usepackage{mathtools}
+
+\oddsidemargin0cm
+\topmargin-2cm     %I recommend adding these three lines to increase the 
+\textwidth16.5cm   %amount of usable space on the page (and save trees)
+\textheight23.5cm  
+
+\newcommand{\question}[2] {\vspace{.25in} \hrule\vspace{0.5em}
+\noindent{\bf #1: #2} \vspace{0.5em}
+\hrule \vspace{.10in}}
+\renewcommand{\part}[1] {\vspace{.10in} {\bf (#1)}}
+
+\newcommand{\myname}{Katherine Kireeva}
+\newcommand{\myandrew}{kkireeva}
+\newcommand{\myhwnum}{3}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt plus 1pt}
+ 
+\pagestyle{fancyplain}
+\lhead{\fancyplain{}{\textbf{HW\myhwnum}}}      % Note the different brackets!
+\rhead{\fancyplain{}{\myname\\ \myandrew}}
+\chead{\fancyplain{}{15-150}}
+\let\oldhat\hat
+\renewcommand{\hat}[1]{\oldhat{\mathbf{#1}}}
+\newcommand{\plus}{$^{+}$ } 
+\begin{document}
+
+\medskip                        % Skip a "medium" amount of space
+                                % (latex determines what medium is)
+                                % Also try: \bigskip, \littleskip
+
+\thispagestyle{plain}
+\begin{center}                  % Center the following lines
+\myname \\
+\myandrew \\
+Homework 1 CDM
+\end{center}
+\question{1}{Abstract}
+
+The purpose of our experiment to investigate a mass oscilating on a spring without any external forces. This was achieved by having a glider on a frictionless air track between two springs. We measured the spring constant by attaching a pulley with a counterweight and measuring the displacement of the glider from its equilibrium position. Using the k for the system with four springs, we were able to predict the k for two other setups, three and two springs respectively. We then measured the periods of systems each system varying the masses placed on each glider. Our measured periods had poor agreement with the predicted values due to predicting the k of the other systems through calculations rather than experimentally. 
+\bigskip
+
+
+\question{2}{Introduction}
+The physics motivating this expiriment is hooke's law,
+$$\vec{F_s} =-k\vec{x}$$
+\\Where the spring force is directly proportional to the displacement from the spring's unstreched length, $x$.
+
+The acceleration of a mass $m$ is governed by Newton's laws 
+$$\vec{F_{net}} =-m\vec{a}$$
+The net force along the x-direction is just the spring force, so 
+$$\vec{F_s} = \vec{F_{net}}$$
+Deviding by mass and finding a solution to the system gives this differential equation
+$$\frac{d^2x}{dt} +  \frac{kx}{m} = 0$$
+A solution to the diff. eq. would be 
+$$x(t) = x_0 * cos(w_0*t)$$
+
+where $x_0$ is the intial amplitude and $w_0 = \sqrt{\frac{m}{k}}$ is the natural freqeucy of the system. The natural frequency can also be used to calculate the natural period, $T = \frac{2\pi}{w_0}$.
+\newpage
+\question{3}{Procedure}
+
+Later parts of the expiriment used a timer with an infrared beam to measure the period of oscillation. When the cart passed the timer, it would break the beam and start the time record. When it returned and broke the beam a second and third time, that would be one full period and the time would stop.
+The first important step was to calibrate the timer in order to have more accurate results. This was done by using a much more precise, (6 significant digits) signal generator connected to oscillator whose flag would break the beam three times in a full period. Taking the average period for several different generator frequencies allowed us to plot a LSF line to get the offset and scale of the timer's inaccuracy.
+\vfill
+The line intercept a, is the offset of the timer.
+The slope of the line, b, is the ratio between the timer's internal clock and the the signal generator's more precise clock.
+\newpage
+The other preliminary step is to measure the spring constant for several different systems. Due to expirimenter error, we only measured one. However, using the equations above, we were able to extrapolate the rest.
+By setting up a mass attached to a string to the glider, we were able to measure the displacement for several different amounts of mass.
+\newpage
+Finally, we measured the period in five different expirimental setups, using the calibrated timer, and compared it to the predicted period.
+\vfill
+Here are the results
+\vfill
+\question{4}{Conclusion}
+Our results had significant disagreement for some the setups, most likely because we didn't measure the spring constants expirimentally, instead determined them analyticly. Another source of error could result from incorectly scalling the mass of the springs. 
+\end{document}
