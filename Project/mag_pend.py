@@ -42,9 +42,9 @@ mom_arrow = arrow(pos=bob.pos, axis=vector(0,0,0), color=color.orange)
 #MAGNETS
 p_moment = arrow(axis=vector(3,3,3), color=color.yellow)
 magnets = [
-    arrow(pos=vector(2,4,0), axis=vector(4,1,2), color=color.yellow),
-    arrow(pos=vector(5,-6,0), axis=vector(1,6,7), color=color.yellow),
-    arrow(pos=vector(-10,9,0), axis=vector(2,9,5), color=color.yellow)]
+    arrow(pos=vector(2,4,0), axis=vector(4,2,6), color=color.yellow),
+    arrow(pos=vector(5,-6,0), axis=vector(1,-6,7), color=color.yellow),
+    arrow(pos=vector(-10,9,0), axis=vector(-12,9,5), color=color.yellow)]
 
 
 def sphere_to_vector(p, t):
