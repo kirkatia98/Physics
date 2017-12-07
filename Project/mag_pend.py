@@ -42,9 +42,10 @@ def cos_phi(pos):
 def calculate_force(bob, rod):
     pos = bob.pos 
     gravity = mass * g
-    tension = -gravity/cos_phi(pos) * norm(rod.axis)
+    tension = gravity/cos_phi(pos) * (-norm(rod.axis))
+    
     # add summing over array of magnetic moments
-    return vector(0, 0, gravity) + tension
+    return tension + vector(0, 0, -gravity)
 
 
 def trace_path(initial, rod, bob):
@@ -55,21 +56,22 @@ def trace_path(initial, rod, bob):
     time = 0
     rate(100) 
     force = vector(0,0,0)
-    #force_arrow = arrow(pos=bob.pos, axis=force, color=color.blue)
+    force_arrow = arrow(pos=bob.pos, axis=force, color=color.blue)
     
     momentum = vector(0,0,0)
-    #mom_arrow = arrow(pos=bob.pos, axis=momentum, color=color.orange)
-    sleep(1) 
-    while(time < 0.5):
+    mom_arrow = arrow(pos=bob.pos, axis=momentum, color=color.orange)
+    while(time < 10):
+        rate(100)
         force = calculate_force(bob, rod)
-        #force_arrow.axis=force * 0.01
+        force_arrow.axis=force
+        force_arrow.pos = bob.pos
+
         momentum+= force * timestep
-        #mom_arrow.axis = momentum * 0.01
-        
+        mom_arrow.axis = momentum
+        mom_arrow.pos = bob.pos
+
         bob.pos += (momentum / mass) * timestep
         rod.axis = bob.pos - rod.pos
-        
-
         time += timestep
 
 def main():
@@ -83,17 +85,18 @@ def main():
         shaftwidth=length*0.05, color=color.green)
     bob = sphere(pos=(0, 0, height), radius=2, color=color.green,
         make_trail=True, trail_type = "points") 
-     
+    
+    force = vector(0,0,0)
     force_arrow = arrow(pos=bob.pos, axis=vector(0,0,0), color=color.blue)
     theta = 0
     while(theta <= 2*pi):
-        phi = -pi/2
-        while(phi <= pi/2):
+        phi = -3*pi/8
+        while(phi <= 3*pi/8):
             init_pos = sphere_to_vector(phi, theta)
-            #trace_path(init_pos, rod, bob)
-            force_arrow.axis = calculate_force(bob, rod)
-            sleep(1)
-            scene.range =3*length
+            
+            trace_path(init_pos, rod, bob)
+            sleep(0.1)
+
             phi += phi_step
         theta += theta_step
 
