@@ -34,12 +34,40 @@ def sphere_to_vector(p, t):
     return vector(x,y,z)
 
 
-# def calculate_force():
+def cos_phi(pos):
+    arc = (pos.z - height)/length
+    return 1 - arc
+
+
+def calculate_force(bob, rod):
+    pos = bob.pos 
+    gravity = mass * g
+    tension = -gravity/cos_phi(pos)) * norm(rod.axis)
+    # add summing over array of magnetic moments
+    return vector(0, 0, -mass * g) + tension
+
 
 def trace_path(initial, rod, bob):
     # place the rod, and the ball at the initial position
     bob.pos = initial 
     rod.axis = bob.pos - rod.pos
+    pos = bob.pos
+    time = 0
+    
+    force = vector(0,0,0)
+    force_arrow = arrow(pos=bob.pos, axis=force, color=color.blue)
+    
+    momentum = vector(0,0,0)
+    mom_arrow = arrow(pos=bob.pos, axis=momentum, color=color.blue)
+    
+    pos = arrow(pos=bob.pos, axis=pos, color=color.blue) 
+    while(time < 1000)
+        force = calculate_force(bob.pos)
+        force_arrow = arrow(pos=bob.pos, axis=force, color=color.blue)
+        momentum+= force
+        
+
+        time += tempstep
 
 def main():
     scene = display(title="Pendulum",width=700,height=700,range=3*length)
