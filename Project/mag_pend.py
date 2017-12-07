@@ -12,18 +12,39 @@ height = 10
 # mass of the bob, (rod can be massless), scalar
 mass = 1
 # the orientation, and strength of the magnetic bob
-p_moment = 0
 
-
-timestep = 0.01
-theta_step = 0.1
+timestep = 0.001
 phi_step = 0.1
+theta_step = 0.5
 
 damping = 0
 
 # CONSTANTS
 g = 9.81
 u_0 = 8.85e10-12
+
+
+#SCENE
+scene = display(title="Pendulum",width=700,height=700,range=3*length)
+scene.autoscale=0
+
+#FLOOR
+floor = cylinder(pos=(0,0, 0), axis =(0,0,0.3), radius=length)
+
+#PENDULUM
+rod = arrow(pos=(0,0,length + height),axis=(0,0,-length), 
+    shaftwidth=length*0.05, color=color.green)
+bob = sphere(pos=(0, 0, height), radius=2, color=color.green)
+#FORCE AND MOMENTUM
+force_arrow = arrow(pos=bob.pos, axis=vector(0,0,0), color=color.blue)
+mom_arrow = arrow(pos=bob.pos, axis=vector(0,0,0), color=color.orange)
+
+#MAGNETS
+p_moment = arrow(axis=vector(3,3,3), color=color.yellow)
+magnets = [
+    arrow(pos=vector(2,4,0), axis=vector(4,1,2), color=color.yellow),
+    arrow(pos=vector(5,-6,0), axis=vector(1,6,7), color=color.yellow),
+    arrow(pos=vector(-10,9,0), axis=vector(2,9,5), color=color.yellow)]
 
 
 def sphere_to_vector(p, t):
@@ -33,72 +54,76 @@ def sphere_to_vector(p, t):
     x = r*cos(t)
     return vector(x,y,z)
 
-
 def cos_phi(pos):
     arc = (pos.z - height)/length
     return 1 - arc
+
+def magnet_force(m2):
+    m1 = p_moment
+
+    r = m1.pos - m2.pos
+    rn = norm(r)
+    K = 3*u_0/4/pi/(mag(r)**4) 
+    t1 = cross(cross(rn, m1.axis), m2.axis)
+    t2 = cross(cross(rn, m2.axis), m1.axis)
+    t3 = 2*rn*(dot(m1.axis, m2.axis))
+    t4 = 2*rn*(dot(cross(rn,m1.axis), cross(rn, m2.axis)))
+    return K * (t1 + t2 + t3 + t4)
+    
 
 
 def calculate_force(bob, rod):
     pos = bob.pos 
     gravity = mass * g
-    tension = gravity/cos_phi(pos) * (-norm(rod.axis))
-    
+    tension = gravity*cos_phi(pos) + ((mag(bob.momentum))**2)/mass/length
+    mforce = vector(0,0,0)
+    for m in magnets:
+        mforce += proj(magnet_force(m), bob.momentum)
+        
     # add summing over array of magnetic moments
-    return tension + vector(0, 0, -gravity)
+    return -tension*norm(rod.axis) + vector(0, 0, -gravity)
 
-
-def trace_path(initial, rod, bob):
+def trace_path(initial):
     # place the rod, and the ball at the initial position
     bob.pos = initial
     rod.axis = bob.pos - rod.pos
     pos = bob.pos
     time = 0
-    rate(100) 
+
     force = vector(0,0,0)
-    force_arrow = arrow(pos=bob.pos, axis=force, color=color.blue)
-    
-    momentum = vector(0,0,0)
-    mom_arrow = arrow(pos=bob.pos, axis=momentum, color=color.orange)
-    while(time < 10):
-        rate(100)
+    bob.momentum = vector(0,0,0)
+    while(time < 40):
+        rate(2000)
         force = calculate_force(bob, rod)
         force_arrow.axis=force
         force_arrow.pos = bob.pos
 
-        momentum+= force * timestep
-        mom_arrow.axis = momentum
+        bob.momentum+= force * timestep
+        mom_arrow.axis = bob.momentum
         mom_arrow.pos = bob.pos
 
-        bob.pos += (momentum / mass) * timestep
+        bob.pos += (bob.momentum / mass) * timestep
         rod.axis = bob.pos - rod.pos
+        p_moment.pos = bob.pos
         time += timestep
 
+
 def main():
-    scene = display(title="Pendulum",width=700,height=700,range=3*length)
-    scene.autoscale=0
-
-    floor = cylinder(pos=(0,0, 0), axis =(0,0,1), radius=length)
-
     # set the pendulum to zero
-    rod = arrow(pos=(0,0,length + height),axis=(0,0,-length), 
-        shaftwidth=length*0.05, color=color.green)
-    bob = sphere(pos=(0, 0, height), radius=2, color=color.green,
-        make_trail=True, trail_type = "points") 
     
-    force = vector(0,0,0)
-    force_arrow = arrow(pos=bob.pos, axis=vector(0,0,0), color=color.blue)
-    theta = 0
-    while(theta <= 2*pi):
-        phi = -3*pi/8
-        while(phi <= 3*pi/8):
+    
+    phi = -pi/2
+    while(phi <= pi/2):
+        theta = 0
+        while(theta <= 2*pi):
             init_pos = sphere_to_vector(phi, theta)
             
-            trace_path(init_pos, rod, bob)
+            trace_path(init_pos)
+            
             sleep(0.1)
 
-            phi += phi_step
-        theta += theta_step
+    phi += phi_step
+    theta += theta_step
 
 
 if __name__ == "__main__":
